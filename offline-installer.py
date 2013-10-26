@@ -20,7 +20,7 @@ def main():
     print "Hostname:", hostname
     print "Package list:", packagelist
    
-    wd = os.getcwd()
+    wd = os.getenv("PWD")
 
     if not os.path.exists(os.path.join(wd, "tmpdir")):
         os.mkdir(os.path.join(wd, "tmpdir"))
@@ -32,7 +32,8 @@ def main():
              packagelist,
             hostname=hostname)
     cmdcall(["sh", os.path.join(wd, "download_script")])
-    cmdcall("sudo cp *.deb /var/cache/apt/archives".split(),
+    cmdcall(["sudo", "cp", os.path.join(wd, "tmpdir")+"/*.deb",
+             "/var/cache/apt/archives"],
             hostname=hostname)
     cmdcall("sudo apt-get install".split() + packagelist,
             hostname=hostname)
